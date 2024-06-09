@@ -2,7 +2,7 @@ RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 
-
+RewriteRule ^smartfarm_jwt/?$ smartfarm_jwt/index.php [L]
 # Aturan untuk folder 'login'
 RewriteRule ^login/?$ login/index.php [L]
 
