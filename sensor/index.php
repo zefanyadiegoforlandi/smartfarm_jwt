@@ -30,6 +30,9 @@ function getBearerToken() {
 
 try {
     $database = getDbConnection();
+    $conn = $database;
+    $data = $_POST;
+
     if (!$database) {
         respond(500, "Failed to connect to database.");
     }
@@ -52,9 +55,9 @@ try {
         if (!$user) {
             respond(401, "User not found.");
         }
-
         $id_sensor = $_GET['id_sensor'] ?? null;
         $method = $_SERVER['REQUEST_METHOD'];
+
 
         if ($level === 'admin') {
             switch ($method) {
@@ -62,7 +65,7 @@ try {
                     $result = $id_sensor ? getSensorById($database, $id_sensor) : getAllSensors($database);
                     break;
                 case 'POST':
-                    $result = addOrUpdateSensor($database, $id_sensor, $_POST);
+                    $result = $id_sensor ? updateSensor($conn, $id_sensor, $data) : addSensor($conn, $data);
                     break;
                 case 'DELETE':
                     $result = $id_sensor ? deleteSensor($database, $id_sensor) : respond(400, "Please provide an ID to delete.");
@@ -103,15 +106,6 @@ function getSensorById($conn, $id_sensor) {
     $stmt = $conn->prepare($sql);
     $stmt->execute([$id_sensor]);
     return $stmt->fetch(PDO::FETCH_ASSOC) ?: ['message' => 'Sensor not found'];
-}
-
-
-function addOrUpdateSensor($conn, $id_sensor, $data) {
-    if ($id_sensor) {
-        return updateSensor($conn, $id_sensor, $data);
-    } else {
-        return addSensor($conn, $data);
-    }
 }
 
 function addSensor($conn, $data) {
