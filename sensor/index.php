@@ -102,8 +102,9 @@ function getSensorById($conn, $id_sensor) {
     $sql = "SELECT * FROM sensor WHERE id_sensor = ?";
     $stmt = $conn->prepare($sql);
     $stmt->execute([$id_sensor]);
-    return $stmt->fetch(PDO::FETCH_ASSOC);
+    return $stmt->fetch(PDO::FETCH_ASSOC) ?: ['message' => 'Sensor not found'];
 }
+
 
 function addOrUpdateSensor($conn, $id_sensor, $data) {
     if ($id_sensor) {

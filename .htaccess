@@ -2,7 +2,7 @@ RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 
-RewriteRule ^smartfarm_api/?$ smartfarm_api/index.php [L]
+RewriteRule ^smartfarm_jwt/?$ smartfarm_jwt/index.php [L]
 # Aturan untuk folder 'users'
 RewriteRule ^users/?$ users/index.php [L]
 RewriteRule ^users/([0-9]+)$ users/index.php?id=$1 [L]
