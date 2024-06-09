@@ -1,0 +1,20 @@
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+RewriteRule ^smartfarm_api/?$ smartfarm_api/index.php [L]
+# Aturan untuk folder 'users'
+RewriteRule ^users/?$ users/index.php [L]
+RewriteRule ^users/([0-9]+)$ users/index.php?id=$1 [L]
+
+# Aturan untuk folder 'sensor'
+RewriteRule ^sensor/?$ sensor/index.php [L]
+RewriteRule ^sensor/([A-Za-z0-9-]+)$ sensor/index.php?id_sensor=$1 [L]
+
+# Aturan untuk folder 'lahan'
+RewriteRule ^lahan/?$ lahan/index.php [L]
+RewriteRule ^lahan/([A-Za-z0-9-]+)$ lahan/index.php?id_lahan=$1 [L]
+
+# Aturan untuk folder 'data_sensor'
+RewriteRule ^data_sensor/?$ data_sensor/index.php [L]
+RewriteRule ^data_sensor/([A-Za-z0-9-]+)$ data_sensor/index.php?id_sensor=$1 [L]
