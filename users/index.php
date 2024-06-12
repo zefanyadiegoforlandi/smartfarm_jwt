@@ -143,16 +143,36 @@ function addUser($conn, $data) {
 function updateUser($conn, $id, $data) {
     if (empty($data)) {
         respond(400, "No data provided for update.");
+        return;
     }
 
     $allowed_fields = ['name', 'email', 'password', 'level', 'alamat_user'];
     $update_fields = [];
     $params = [];
 
+    // Fetch current user data
+    $sql = "SELECT " . implode(", ", $allowed_fields) . " FROM users WHERE id = :id";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([':id' => $id]);
+    $current_data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$current_data) {
+        respond(404, "User not found.");
+        return;
+    }
+
     foreach ($data as $key => $value) {
-        if (in_array($key, $allowed_fields)) {
+        if (in_array($key, $allowed_fields) && $value !== null && $value !== '') {
             if ($key === 'password') {
-                $value = password_hash($value, PASSWORD_BCRYPT); // Menggunakan hash untuk password
+                // Hash the new password and compare with the current hashed password
+                if (password_verify($value, $current_data[$key])) {
+                    continue; // Password is the same, skip update
+                }
+                $value = password_hash($value, PASSWORD_BCRYPT);
+            } else {
+                if ($value == $current_data[$key]) {
+                    continue; // Value is the same, skip update
+                }
             }
             $update_fields[] = "$key = :$key";
             $params[":$key"] = $value;
@@ -160,7 +180,8 @@ function updateUser($conn, $id, $data) {
     }
 
     if (empty($update_fields)) {
-        respond(400, "No valid fields provided for update.");
+        respond(400, "No valid fields provided for update or data is the same.");
+        return;
     }
 
     $params[':id'] = $id;
@@ -176,6 +197,7 @@ function updateUser($conn, $id, $data) {
         respond(500, "Error: " . $e->getMessage());
     }
 }
+
 
 function deleteUser($conn, $id) {
     $sql = "DELETE FROM users WHERE id = ?";

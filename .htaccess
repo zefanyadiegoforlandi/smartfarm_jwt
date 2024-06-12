@@ -6,6 +6,8 @@ RewriteRule ^smartfarm_jwt/?$ smartfarm_jwt/index.php [L]
 # Aturan untuk folder 'login'
 RewriteRule ^login/?$ login/index.php [L]
 
+RewriteRule ^check-email/?$ check-email/index.php [L]
+
 RewriteRule ^smartfarm_jwt/?$ smartfarm_jwt/index.php [L]
 # Aturan untuk folder 'users'
 RewriteRule ^users/?$ users/index.php [L]
